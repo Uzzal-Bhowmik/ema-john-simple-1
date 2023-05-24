@@ -21,15 +21,14 @@ const removeFromDb = id => {
     }
 }
 
-const getShoppingCart = () => {
-    let shoppingCart = {};
 
-    //get the shopping cart from local storage
-    const storedCart = localStorage.getItem('shopping-cart');
-    if (storedCart) {
-        shoppingCart = JSON.parse(storedCart);
+const getShoppingCart = () => {
+    if(localStorage.getItem("shopping-cart")) {
+        return JSON.parse(localStorage.getItem("shopping-cart"));
     }
-    return shoppingCart;
+    else {
+        return {};
+    }
 }
 
 const deleteShoppingCart = () => {

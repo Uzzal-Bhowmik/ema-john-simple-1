@@ -1,7 +1,12 @@
-.order-sum {
-    padding: 23px;
+.cart-container {
     background: rgba(255, 153, 0, 0.3);
     font-family: 'lato';
+}
+
+.order-sum {
+    padding: 23px;
+    position: sticky;
+    top: 0;
 }
 
 .order-sum h1 {
@@ -23,7 +28,7 @@
 .order-info h4 {
     color: #0E161A;
     font-weight: normal;
-    font-size: 21px;
+    font-size: 22px;
 }
 
 .dollar-icon {
