@@ -1,0 +1,31 @@
+.order-sum {
+    padding: 23px;
+    background: rgba(255, 153, 0, 0.3);
+    font-family: 'lato';
+}
+
+.order-sum h1 {
+    font-size: 25px;
+    color: #1C2B35;
+    font-weight: normal;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.order-info {
+    margin-top: 50px;
+}
+
+.order-info p {
+    color: #2A414F;
+}
+
+.order-info h4 {
+    color: #0E161A;
+    font-weight: normal;
+    font-size: 21px;
+}
+
+.dollar-icon {
+    margin-left: 10px;
+}
