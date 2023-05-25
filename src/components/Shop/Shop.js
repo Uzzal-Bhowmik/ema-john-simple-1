@@ -14,32 +14,68 @@ const Shop = () => {
         .then(data => setProducts(data))
     }, [])
 
+    
+    // get the local storage data
+    // useEffect is used since function loads data from local-storage/external source.
+    useEffect(()=> {    
+        const storedCartLS = getShoppingCart();
+        let addedProduct;
+        let newStoredCartLS = [];
+
+        for(const id in storedCartLS) {
+
+          addedProduct  = products.find(pd => pd.id === id);
+          
+          if(addedProduct) {
+            addedProduct.quantity = storedCartLS[id];
+            newStoredCartLS.push(addedProduct); // added pd obj with new quantity value
+          }
+
+        }
+
+        setCart(newStoredCartLS);
+
+    }, [products]) // as the dependency is products which loads only on the reload so this new cart with LS data gets set every-time the page reloads.
+
 
 
     // contains products added to cart 
-    const [addedPdCart, setAddedProductsCart] = useState([]);
+    const [cart, setCart] = useState([]);
 
     // event handler for add to cart
     const handleAddToCart = (product) => {
-        
-        //updating cart with preValue and adding new value
-        setAddedProductsCart([...addedPdCart, product]);
+
+        //updating cart onClick with preValue and adding new value
+        if(cart.length) {
+            let flag;
+            for(const pd of cart) {
+                flag = "not matched";
+                if(pd.id === product.id) {
+                    flag = "matched";
+                    // finding other products other than the matching one
+                    const rest = cart.filter(pd => pd.id !== product.id)
+                    pd.quantity += 1;
+                    setCart([...rest, pd]); // updating quantity of the same product, not adding it as a new one;
+                    break;
+                }
+            }
+
+            if(flag==="not matched") { 
+                // adding product as a new one
+                product.quantity = 1;
+                setCart([...cart, product]);
+                
+            }
+        }
+        else {
+            product.quantity = 1;
+            setCart([product]);
+        }
 
         //adding or updating cart in local storage
         addToDb(product.id);
     }
 
-    // get the local storage data
-    // useEffect is used since function loads data from     local-storage/external source.
-    useEffect(()=> {    
-        const addedPdIdLS = getShoppingCart();
-        
-        for(const id in addedPdIdLS) {
-            const addedPdCartLS = products.find(pd => pd.id === id)
-        }
-
-
-    }, [])
 
     return (
         <div className='shop'>
@@ -48,7 +84,7 @@ const Shop = () => {
 
 
             {/* right part */}
-            <OrderSummary addedPdCart={addedPdCart}></OrderSummary>
+            <OrderSummary cart={cart}></OrderSummary>
         </div>
     );
 };

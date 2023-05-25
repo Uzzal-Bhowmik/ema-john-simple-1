@@ -5,13 +5,20 @@ import "./OrderSummary.css";
 import { addFromArray } from '../../utilities/calculatingVal';
 
 const OrderSummary = (props) => {
-    const {addedPdCart} = props;
+    const {cart} = props;
 
     // calculating total price of selected items in cart
-    const totalPrice = addFromArray(addedPdCart, "price");
-    const totalShipping = addFromArray(addedPdCart, "shipping");
-    const tax = (totalPrice * 0.1).toFixed(2); // 10% of total price
-    const grandTotal = totalPrice + totalShipping + tax;
+
+    let totalQuantity=0, totalPrice=0, totalShipping=0, tax=0, grandTotal=0;
+
+    for(const pd of cart) {
+        totalQuantity += pd.quantity;
+
+        totalPrice = totalPrice + (parseInt(pd.price) * pd.quantity);
+        totalShipping = totalShipping + (parseInt(pd.shipping) * pd.quantity);
+        tax = totalPrice * 0.1;
+        grandTotal = totalPrice + totalShipping + tax;
+    }
     
 
     return (
@@ -19,11 +26,11 @@ const OrderSummary = (props) => {
             <div className='order-sum'>
                 <h1>Order Summary</h1>
             <div className='order-info'>
-                <p>Selected items: {addedPdCart.length}</p>
+                <p>Selected items: {totalQuantity}</p>
                 <p>Total Price: <span className="dollar-icon"><FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon></span>  {totalPrice}</p>
-                <p>Total Shipping Charge: <span className="dollar-icon"><FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon></span>{totalShipping} </p>
-                <p>Total Tax:<span className="dollar-icon"><FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon></span>{tax}</p>
-                <h4>Grand Total: <span className="dollar-icon"><FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon></span> {parseFloat(grandTotal).toFixed(2)}</h4>
+                <p>Total Shipping Charge: <span className="dollar-icon"><FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon></span>{totalShipping}</p>
+                <p>Total Tax:<span className="dollar-icon"><FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon></span>{tax.toFixed(2)}</p>
+                <h4>Grand Total: <span className="dollar-icon"><FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon></span>{grandTotal.toFixed(2)} </h4>
             </div>
             </div>
         </div>
