@@ -3,33 +3,28 @@ import "./Shop.css";
 import ProductsContainer from '../ProductsContainer/ProductsContainer';
 import OrderSummary from '../OrderSummary/OrderSummary';
 import { addToDb, getShoppingCart } from '../../utilities/fakedb';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 
 const Shop = () => {
 
-     // loading products data
-    const [products, setProducts] = useState([]);
-    useEffect(()=> {
-        fetch("products.json")
-        .then(res => res.json())
-        .then(data => setProducts(data))
-    }, [])
+    // loading products data
+    const products = useLoaderData();
 
-    
     // get the local storage data
     // useEffect is used since function loads data from local-storage/external source.
-    useEffect(()=> {    
+    useEffect(() => {
         const storedCartLS = getShoppingCart();
         let addedProduct;
         let newStoredCartLS = [];
 
-        for(const id in storedCartLS) {
+        for (const id in storedCartLS) {
 
-          addedProduct  = products.find(pd => pd.id === id);
-          
-          if(addedProduct) {
-            addedProduct.quantity = storedCartLS[id];
-            newStoredCartLS.push(addedProduct); // added pd obj with new quantity value
-          }
+            addedProduct = products.find(pd => pd.id === id);
+
+            if (addedProduct) {
+                addedProduct.quantity = storedCartLS[id];
+                newStoredCartLS.push(addedProduct); // added pd obj with new quantity value
+            }
 
         }
 
@@ -46,11 +41,11 @@ const Shop = () => {
     const handleAddToCart = (product) => {
 
         //updating cart onClick with preValue and adding new value
-        if(cart.length) {
+        if (cart.length) {
             let flag;
-            for(const pd of cart) {
+            for (const pd of cart) {
                 flag = "not matched";
-                if(pd.id === product.id) {
+                if (pd.id === product.id) {
                     flag = "matched";
                     // finding other products other than the matching one
                     const rest = cart.filter(pd => pd.id !== product.id)
@@ -60,11 +55,11 @@ const Shop = () => {
                 }
             }
 
-            if(flag==="not matched") { 
+            if (flag === "not matched") {
                 // adding product as a new one
                 product.quantity = 1;
                 setCart([...cart, product]);
-                
+
             }
         }
         else {
@@ -76,6 +71,10 @@ const Shop = () => {
         addToDb(product.id);
     }
 
+    const navigate = useNavigate();
+    const handleReviewOrder = () => {
+        navigate("/orders");
+    }
 
     return (
         <div className='shop'>
@@ -84,7 +83,11 @@ const Shop = () => {
 
 
             {/* right part */}
-            <OrderSummary cart={cart}></OrderSummary>
+            <OrderSummary cart={cart}>
+                <button className='review-order-btn' onClick={handleReviewOrder}>
+                    Review Order
+                </button>
+            </OrderSummary>
         </div>
     );
 };
